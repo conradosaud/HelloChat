@@ -1,0 +1,125 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Define a altura total da tela */
+    display: flex;
+    flex-direction: column; /* Ajusta o layout para uma coluna */
+}
+
+header {
+    font-size: 0.8em;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+header h1{
+    font-size: 1.5em;
+    margin: 0;
+}
+header p{
+    font-size: 1em;
+    margin: 0;
+}
+
+main {
+    flex-grow: 1; /* Faz o main ocupar todo o espaço restante */
+    display: flex;
+    flex-direction: column;
+}
+
+#messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.message {
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    max-width: 70%;
+    align-self: flex-start;
+}
+
+.sent-message {
+    background-color: #007bff;
+    color: #fff;
+    align-self: flex-end;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+/* Estilos base */
+.msg {
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    max-width: 70%;
+    width: fit-content;
+}
+
+/* Estilos para mensagens do proprietário */
+.msgOwner {
+    background-color: #007bff; /* Cor de fundo azul */
+    color: #fff; /* Cor do texto branco */
+    margin-left: auto;
+}
+
+/* Estilos para mensagens de outros usuários */
+.msgOther {
+    background-color: #f4f4f4; /* Cor de fundo cinza claro */
+    color: #333; /* Cor do texto preto */
+    margin-right: auto;
+}
+
+/* Estilos para o nome de usuário */
+.msg .username {
+    font-weight: bold; /* Texto em negrito */
+    margin-bottom: 2px; /* Margem inferior */
+    font-size: 0.8em;
+}
+.msg .content {
+    margin-top: 0;
+}
+
+#usuarios{
+    text-align: center;
+    font-size: 0.8em;
+    background-color: #F5F5F5;
+}
+#connectedUsers{
+    font-weight: bold;
+}

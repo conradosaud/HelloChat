@@ -22,7 +22,8 @@ io.on('connection', (socket) => {
 
     // Obtém o IP de quem conectou
     const ipAddress = socket.handshake.address;
-    console.log(`User [${ipAddress} is connected`);
+    const conID = socket.id;
+    console.log(`User [${conID}] is connected`);
 
     // Evento enviado pelo client
     socket.on('chat message', (msg) => {

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelloChat - Client view</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <header>
+        <h1> HelloChat </h1> 
+        <p> Chat usando WebSockets </p>
+    </header>
+
+    <div id="waitRoom">
+        <form onsubmit="connect(event)">
+            <input placeholder="Digite o seu nome" id="inputName" type="text" />
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <main style="display: none;">
+
+        <div id="usuarios">
+            <p>Usuários conectados agora:</p>
+            <p id="connectedUsers">Conrado, Helena, Pedro, Maria</p>
+        </div>
+
+        <div id="messages" class="messageBoxBg" >
+
+            <!-- <div class="msg msgOwner"><p class="username">${username}</p><p class="content">${content}</p></div> -->
+
+        </div>
+
+        <form onsubmit="submitForm(event)">
+            <input placeholder="Digite sua mensagem" id="inputMsg" type="text" />
+            <button type="submit">Enviar</button>
+        </form>
+
+    </main>
+
+
+    <!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        // Instância do socket io
+        const socket = io();
+        let myID = null;
+        let myName = null;
+
+        socket.on('new_connection', response => {
+            myID = response;
+        });
+
+        // Obtém os itens do HTML
+        const input = document.querySelector("#inputMsg");
+        const messages = document.querySelector("#messages");
+        const form = document.querySelector("form");
+        const usersPanel = document.querySelector("#connectedUsers");
+
+        function connect(e){
+            e.preventDefault();
+            document.querySelector("#waitRoom").style.display = "none";
+            document.querySelector("main").style.display = "flex";
+            myName = document.querySelector("#inputName").value;
+            socket.emit("new_connection", myID, myName);
+        }
+
+
+
+        // Escreva a mensagem no chat
+        function writeMessageOnChat(isOwner, username, content){
+            const messageTemplate = `
+                <div class="msg ${isOwner?"msgOwner":"msgOther"}"><p class="username">${username}</p><p class="content">${content}</p></div>
+            `;
+            messages.innerHTML += messageTemplate;
+        }
+
+        function updateConnectedUsers( users ){
+            let usersString = "";
+            users.map( user => usersString += `${user.name}, ` )
+            usersString = usersString.substring(0, usersString.length-2);
+            usersPanel.innerHTML = usersString;
+        }
+
+        // Obtém as entradas de texto do input
+        function getInputValue(){
+            const value = input.value;
+            input.value = "";
+            return value;
+        }
+        // Obtém os eventos de envio do formulário e do enter
+        function submitForm(e){
+            e.preventDefault();
+            sendMessage();
+        }
+        form.addEventListener("keypress", e => {
+            if( e.code == "Enter" )
+                sendMessage();
+        })
+
+        // Envia um evento para o servidor
+        function sendMessage(){
+            const message = getInputValue();
+            if( message == "" )
+                return;
+            socket.emit("new_client_message", message);
+        }
+
+        // Recebe a atualização de mensagens do servidor
+        socket.on('broadcast_message', (response) => {
+            response = JSON.parse(response);
+            isOwner = response.username == myID;
+            writeMessageOnChat(isOwner, response.username, response.message);
+        });
+
+        socket.on('user_notification', (response) => {
+            updateConnectedUsers(JSON.parse( response ) );
+        });
+
+    </script>
+
+</body>
+</html>
