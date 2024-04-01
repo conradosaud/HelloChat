@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelloChat - Client view</title>
+</head>
+<body>
+    <h1> HelloChat </h1> 
+    <p> This is the client view </p>
+
+    <div>
+
+        <div id="messages" style="border: 1px solid grey;" ></div>
+
+        <input id="inputMsg" />
+        <button onclick="sendMsg();">Enviar</button>
+    </div>
+
+    <!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        // Instância do socket io
+        const socket = io();
+
+        // Obtém os itens do HTML
+        const input = document.querySelector("#inputMsg");
+        const messages = document.querySelector("#messages");
+
+        // Função chamada pelo botão
+        function sendMsg(){
+            
+            const value = input.value;
+            input.value = "";
+
+            // Envia um evento para o servidor
+            socket.emit("chat message", value);
+
+        }
+
+        // Obtém as mensagens emitidas pelo servidor
+        socket.on('from server', (msg) => {
+            msg = JSON.parse(msg);
+            messages.innerHTML += `<strong>${msg.ip}:</strong> ${msg.message}`;
+            messages.innerHTML += "<br/>";
+        });
+
+    </script>
+
+</body>
+</html>
